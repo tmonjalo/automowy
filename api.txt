@@ -1,0 +1,134 @@
+SPDX-License-Identifier: Unlicense
+
+
+URL: https://amc-api.dss.husqvarnagroup.net/app/v1/
+
+
+GET mowers: [{
+    id,
+    name,
+    model,
+    variant,
+    status: {
+        batteryPercent,
+        lastErrorCode,
+        lastErrorCodeTimestamp,
+        nextStartSource,
+        nextStartTimestamp,
+        storedTimestamp,
+        operatingMode,
+        mowerStatus
+    }
+}, ...]
+
+GET mowers/id/status: {
+    batteryPercent,
+    lastErrorCode,
+    lastErrorCodeTimestamp,
+    nextStartSource,
+    nextStartTimestamp,
+    storedTimestamp,
+    operatingMode,
+    mowerStatus,
+    cachedSettingsUUID,
+    lastLocations
+}
+
+mowerStatus: {
+    mode,
+    activity,
+    restrictedReason,
+    state,
+    type
+}
+
+operatingMode:
+    HOME
+    AUTO
+mode:
+    HOME
+    MAIN_AREA
+
+activity:
+    PARKED_IN_CS
+    LEAVING
+    MOWING
+    GOING_HOME
+    NOT_APPLICABLE
+
+state:
+    IN_OPERATION
+    PAUSED
+    RESTRICTED
+
+restrictedReason:
+    PARK_OVERRIDE
+    NOT_APPLICABLE
+
+type:
+    WEEK_SCHEDULE
+    OVERRIDE
+    NOT_APPLICABLE
+
+nextStartSource:
+    MOWER_CHARGING
+    WEEK_TIMER
+    COUNTDOWN_TIMER
+    NO_SOURCE
+
+GET mowers/id/geofence: {
+    centralPoint: {
+        location,
+        sensitivity: {
+            level
+            radius
+        }
+    },
+    lastLocations
+}
+
+location: {latitude, longitude, gpsStatus}
+lastLocations: [location, ...]
+gpsStatus:
+    USING_GPS_MAP
+    None
+
+GET mowers/id/settings: {
+    settings: {id: value, ...}
+}
+
+PUT mowers/id/settings: {
+    settings: {id:value}
+}
+
+settings id:
+    cuttingHeight
+    spiralCutting: {enabled, intensity}
+    ecoMode
+    weatherTimer: {enabled, cuttingTime}
+    geofence: {
+        centralPoint: {latitude, longitude},
+        sensitivityLevel,
+        radiusInMeters,
+        timeOutsideInSeconds
+    }
+    areaCoverage: [{enabled, loopWire, runningDistance, proportion}, ...]
+    boundary: {followGuideHome, delayTime, corridorWidthMin, corridorWidthMax}
+    guides: [{followGuideHome, delayTime, corridorWidthMax}, ...]
+    exitAngles: {exitAngle1Min, exitAngle1Max, exitAngle2Min, exitAngle2Max, proportionSector1}
+    chargingStationRange
+    drivePastWire
+    reversingDistance
+    gpsAssistedNavigation
+    ultraSonicSensorsEnabled
+    avoidCollisionWithHouse
+    headlight: {flashOnError, mode}
+
+POST mowers/id/control/start
+POST mowers/id/control/start/override/period: {
+    period:minutes
+}
+
+POST mowers/id/control/pause
+POST mowers/id/control/park
+POST mowers/id/control/park/duration/timer
